@@ -2,6 +2,7 @@ import os
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+import joblib
 
 db_username = os.environ['DB_USERNAME']
 db_password = os.environ['DB_PASSWORD']
@@ -44,5 +45,15 @@ def show_users():
         user_list[user.id] = user.name
     return user_list
 
+@app.route('/users')
+def show_users():
+    users = User.query.all()
+    user_list = {}
+    for user in users:
+        user_list[user.id] = user.name
+    return user_list
+
+model = joblib.load('pikel.pkl')
+print(model)
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5555)
